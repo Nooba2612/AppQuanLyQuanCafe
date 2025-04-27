@@ -24,6 +24,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
 import dao.ChiTietHoaDon_DAO;
@@ -35,7 +36,6 @@ public class HoaDon_GUI extends JPanel implements MouseListener, ActionListener 
 
     private JLabel lbTitle;
     private Box boxWhole, boxTop, boxBottom;
-//	private JPanel p1, p2, p3;
     private DefaultTableModel modelHoaDon;
     private JTable tableHoaDon;
     private JScrollPane scrollHoaDon;
@@ -43,6 +43,11 @@ public class HoaDon_GUI extends JPanel implements MouseListener, ActionListener 
     private JButton btnBestSeller, btnDTHomNay, btnDTThangNay, btnDTNgay, btnDTThang;
     private static HoaDon_DAO hd_dao = new HoaDon_DAO();
     private static ChiTietHoaDon_DAO cthd_dao = new ChiTietHoaDon_DAO();
+
+    // constants
+    private final Color brown = new Color(139, 69, 19);
+    private final Color lightBrown = new Color(255, 204, 153);
+    private final Color activeColor = new Color(255, 229, 204);
 
     public HoaDon_GUI() {
         //kết nối
@@ -52,6 +57,8 @@ public class HoaDon_GUI extends JPanel implements MouseListener, ActionListener 
             e.printStackTrace();
         }
 
+        setBackground(lightBrown);
+
         //Tạo box và panel
         boxWhole = Box.createVerticalBox();
         boxTop = Box.createHorizontalBox();
@@ -60,7 +67,7 @@ public class HoaDon_GUI extends JPanel implements MouseListener, ActionListener 
         //Tiêu đề
         lbTitle = new JLabel("HÓA ĐƠN");
         lbTitle.setFont(new Font("Arial", Font.BOLD, 20));
-        lbTitle.setForeground(Color.blue);
+        lbTitle.setForeground(brown);
         JPanel pTitle = new JPanel();
         pTitle.add(lbTitle);
 
@@ -80,6 +87,12 @@ public class HoaDon_GUI extends JPanel implements MouseListener, ActionListener 
         btnDTThangNay = new JButton("Doanh thu tháng này");
         btnDTNgay = new JButton("Bảng doanh thu theo ngày");
         btnDTThang = new JButton("Bảng doanh thu theo tháng");
+
+        decorateButton(btnBestSeller);
+        decorateButton(btnDTHomNay);
+        decorateButton(btnDTThangNay);
+        decorateButton(btnDTNgay);
+        decorateButton(btnDTThang);
 
         modelHoaDon.setRowCount(0);
         ArrayList<HoaDon> dshd = hd_dao.getAllHoaDon();
@@ -120,10 +133,7 @@ public class HoaDon_GUI extends JPanel implements MouseListener, ActionListener 
 
         add(boxWhole);
 
-//		setTitle("Bảng doanh thu");
         setSize(1000, 800);
-//		setDefaultCloseOperation(EXIT_ON_CLOSE);
-//		setLocationRelativeTo(null);
         setVisible(true);
 
         //Thêm sự kiện
@@ -133,6 +143,14 @@ public class HoaDon_GUI extends JPanel implements MouseListener, ActionListener 
         btnDTHomNay.addActionListener(this);
         btnDTThangNay.addActionListener(this);
         btnBestSeller.addActionListener(this);
+    }
+
+    private void decorateButton(JButton btn) {
+        btn.setBackground(brown);
+        btn.setForeground(lightBrown);
+        btn.setFont(new Font("Arial", Font.BOLD, 12));
+        btn.setPreferredSize(new Dimension(150, 70));
+        btn.setBorder(new LineBorder(lightBrown, 2, true));
     }
 
     @Override
