@@ -27,13 +27,6 @@ public class ConnectDB {
         con = DriverManager.getConnection(url, databaseUser, databasePassword);
         return con;
     }
-//	public void connect() throws SQLException{
-//		String url = "jdbc:sqlserver://localhost:1433;databasename=QuanLyQuanCaPhe";
-//		String user = "sa";
-//		String pwd = "sa123";
-//		con = DriverManager.getConnection(url, user, pwd);
-//	}
-    //đóng kết nối
 
     public void disconnect() {
         if (con != null) {
@@ -45,25 +38,4 @@ public class ConnectDB {
         }
     }
 
-// test có kết nối thành công hay không
-//	public static void main(String[] args) {
-//		ConnectDB connectDB = ConnectDB.getInstance();
-//	    try {
-//	        connectDB.connect();
-//	        Connection con = connectDB.getConnection();
-//	        if (con != null) {
-//	            System.out.println("Kết nối đến cơ sở dữ liệu thành công.");
-//	            DatabaseMetaData metaData = con.getMetaData();
-//	            System.out.println("Sản phẩm cơ sở dữ liệu: " + metaData.getDatabaseProductName());
-//	            System.out.println("Phiên bản cơ sở dữ liệu: " + metaData.getDatabaseProductVersion());
-//	            System.out.println("Trạng thái kết nối: " + (!con.isClosed() ? "Đang mở" : "Đã đóng"));
-//	        } else {
-//	            System.out.println("Không thể kết nối đến cơ sở dữ liệu.");
-//	        }
-//	    } catch (SQLException e) {
-//	        e.printStackTrace();
-//	    } finally {
-//	        connectDB.disconnect();
-//	    }
-//}
 }

@@ -197,14 +197,13 @@ public class TrangChu_GUI extends JFrame implements ActionListener {
             } catch (IOException err) {
                 err.printStackTrace();
             }
-            contentPanel.setBackground(brown);
             switchContent(newPanel, btnTrangChu);
         } else if (o.equals(btnNhanVien)) {
-            switchContent(new CapNhatNhanVien_GUI(), btnNhanVien);
+            switchContent(new NhanVien_GUI(), btnNhanVien);
         } else if (o.equals(btnBanHang)) {
             switchContent(new BanHang_GUI(), btnBanHang);
         } else if (o.equals(btnSanPham)) {
-            switchContent(new CapNhatMon_GUI(), btnSanPham);
+            switchContent(new Menu_GUI(), btnSanPham);
         } else if (o.equals(btnHoaDon)) {
             switchContent(new HoaDon_GUI(), btnHoaDon);
         } else if (o.equals(btnDiemDanh)) {
@@ -222,5 +221,6 @@ public class TrangChu_GUI extends JFrame implements ActionListener {
         contentPanel.revalidate();
         contentPanel.repaint();
         setActiveButton(activeButton);
+        contentPanel.setBackground(brown);
     }
 }
