@@ -285,6 +285,7 @@ public class BanHang_GUI extends JPanel implements ActionListener, MouseListener
         txtTongTien.setPreferredSize(new Dimension(150, 25));
         pTongTien.add(lbTongTien);
         pTongTien.add(txtTongTien);
+        txtTongTien.setEditable(false);
         txtTongTien.setBorder(BorderFactory.createLineBorder(brown, 3));
 
         cthd.add(pTongTien);
@@ -294,6 +295,7 @@ public class BanHang_GUI extends JPanel implements ActionListener, MouseListener
         txtVAT = new JTextField();
         txtVAT.setPreferredSize(new Dimension(150, 25));
         txtVAT.setText("0.1"); // Đặt giá trị mặc định là 0.1
+        txtVAT.setEditable(false);
         pVAT.add(lbVAT);
         pVAT.add(txtVAT);
         txtVAT.setBorder(BorderFactory.createLineBorder(brown, 3));
@@ -303,6 +305,7 @@ public class BanHang_GUI extends JPanel implements ActionListener, MouseListener
         JLabel lbTongThu = new JLabel("Tổng thu");
         txtTongThu = new JTextField();
         txtTongThu.setPreferredSize(new Dimension(150, 25));
+        txtTongThu.setEditable(false);
         pTongThu.add(lbTongThu);
         pTongThu.add(txtTongThu);
         txtTongThu.setBorder(BorderFactory.createLineBorder(brown, 3));
@@ -334,18 +337,22 @@ public class BanHang_GUI extends JPanel implements ActionListener, MouseListener
         JLabel lbTenKH = new JLabel("Tên khách hàng ");
         txtTenKH = new JTextField();
         txtTenKH.setPreferredSize(new Dimension(150, 25));
+        txtTenKH.setEditable(false);
+        txtTenKH.setBackground(lightBrown);
         pTen.add(lbTenKH);
         pTen.add(txtTenKH);
         pKhachHang.add(pTen);
         pKhachHang.add(Box.createVerticalStrut(10));
         // Điểm tích lũy trên hóa đơn (nếu cần)
         Box pDiem = Box.createHorizontalBox();
-        JLabel lbDiemTL = new JLabel("Điểm tích lũy trên hóa đơn ");
+        JLabel lbDiemTL = new JLabel("Điểm sử dụng:");
         txtDiemTL = new JTextField();
         txtDiemTL.setPreferredSize(new Dimension(150, 25));
         txtDiemTL.setBorder(BorderFactory.createLineBorder(brown, 3));
         JLabel lbDiemTK = new JLabel("Điểm tích lũy trong tài khoản  ");
         txtDiemTK = new JTextField();
+        txtDiemTK.setEditable(false);
+        txtDiemTK.setBackground(lightBrown);
         txtDiemTK.setPreferredSize(new Dimension(150, 25));
         txtDiemTK.setBorder(BorderFactory.createLineBorder(brown, 3));
         pDiem.add(lbDiemTL);
@@ -460,6 +467,10 @@ public class BanHang_GUI extends JPanel implements ActionListener, MouseListener
         txtDonGia.setText("");
         txtSoLuong.setText("");
         txtThanhTien.setText("");
+        txtBan.setText("");
+        txtTongThu.setText("");
+        txtTongTien.setText("");
+        checkBox.setSelected(false);
     }
 
     @Override
@@ -553,30 +564,44 @@ public class BanHang_GUI extends JPanel implements ActionListener, MouseListener
             NhanVien nvTN = dsnvTN.stream().filter(x -> x.getTenNV().equalsIgnoreCase(tenTN)).findFirst().orElse(null);
             KhachHang khachHang = kh_dao.timKHTheoSDT(txtSDT.getText());
             String txtBanStr = txtBan.getText();
-            if (!txtBanStr.isEmpty()) {
-                int soBan = Integer.parseInt(txtBan.getText());
-                String trangThai = cbPTTT.getSelectedItem().toString();
-                Double tongTien = Double.parseDouble(txtTongTien.getText());
-                Double thueVAT = Double.parseDouble(txtVAT.getText());
-                Double tongThu = Double.parseDouble(txtTongThu.getText());
 
-                if (txtTongTien.getText().isEmpty() || txtVAT.getText().isEmpty() || txtTongThu.getText().isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin.");
-                } else {
-                    HoaDon hdNew = new HoaDon(nvTN, khachHang, soBan, trangThai, tongTien, thueVAT, 0, tongThu);
-                    if (hd_dao.addHD(hdNew)) {
-                        // Thêm hóa đơn thành công
-                        JOptionPane.showMessageDialog(this, "Thêm hóa đơn thành công!");
-                    } else {
-                        // Thêm hóa đơn không thành công
-                        JOptionPane.showMessageDialog(this, "Thêm hóa đơn không thành công!");
-                    }
-                }
-            } else {
-                // Xử lý khi chuỗi rỗng
-                JOptionPane.showMessageDialog(this, "Vui lòng nhập số bàn.");
+            if (tableCTHD.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(this, "Chưa chọn món!");
+                return;
             }
 
+            if (!checkBox.isSelected() && txtBanStr.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập số bàn khi chọn 'Tại quán'.");
+                return;
+            }
+
+            if (txtTongTien.getText().isEmpty() || txtVAT.getText().isEmpty() || txtTongThu.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin về tổng tiền, VAT và tổng thu.");
+                return;
+            }
+
+            try {
+                double tongTien = Double.parseDouble(txtTongTien.getText());
+                double thueVAT = Double.parseDouble(txtVAT.getText());
+                double tongThu = Double.parseDouble(txtTongThu.getText());
+
+                int soBan = 0;
+                if (!checkBox.isSelected() && !txtBanStr.isEmpty()) {
+                    soBan = Integer.parseInt(txtBan.getText());
+                }
+
+                HoaDon hdNew = new HoaDon(nvTN, khachHang, soBan, cbPTTT.getSelectedItem().toString(), tongTien, thueVAT, 0, tongThu, checkBox.isSelected() ? "Mang đi" : "Tại quán");
+
+                if (hd_dao.addHD(hdNew)) {
+                    JOptionPane.showMessageDialog(this, "Thêm hóa đơn thành công!");
+                    clearTextFields();
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Thêm hóa đơn không thành công!");
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập giá trị hợp lệ.");
+            }
         }
 
         if (checkBox.isSelected()) {
@@ -603,30 +628,22 @@ public class BanHang_GUI extends JPanel implements ActionListener, MouseListener
                 KhachHang_DAO khachHangDAO = new KhachHang_DAO();
                 KhachHang khachHang = khachHangDAO.timKHTheoSDT(soDienThoai);
                 if (khachHang != null) {
-                    // Hiển thị tên khách hàng lên txtTenKH nếu tìm thấy
                     txtTenKH.setText(khachHang.getTenKH());
 
-                    // Lấy điểm tích lũy từ đối tượng KhachHang
                     int diemTichLuy = khachHang.getDiemTichLuy();
 
-                    // Cập nhật điểm tích lũy trong tài khoản
                     txtDiemTK.setText(String.valueOf(diemTichLuy));
                 } else {
-                    // Nếu không tìm thấy khách hàng, hiển thị hộp thoại xác nhận
                     int choice = JOptionPane.showConfirmDialog(null, "Không tìm thấy khách hàng, bạn có muốn tạo mới không?", "Thông báo", JOptionPane.YES_NO_OPTION);
                     if (choice == JOptionPane.YES_OPTION) {
-                        // Hiển thị hộp thoại nhập thông tin khách hàng
                         String tenKhachHangMoi = JOptionPane.showInputDialog(null, "Nhập tên khách hàng mới:");
 
-                        // Kiểm tra nếu người dùng không hủy bỏ việc nhập
                         if (tenKhachHangMoi != null && !tenKhachHangMoi.isEmpty()) {
-                            // Tạo một đối tượng KhachHang mới và lưu vào cơ sở dữ liệu
                             KhachHang khachHangMoi = new KhachHang();
                             khachHangMoi.setSdt(soDienThoai);
                             khachHangMoi.setTenKH(tenKhachHangMoi);
                             khachHangDAO.themKH(khachHangMoi);
 
-                            // Hiển thị tên khách hàng mới lên txtTenKH
                             txtTenKH.setText(tenKhachHangMoi);
                         }
                     }
@@ -636,6 +653,27 @@ public class BanHang_GUI extends JPanel implements ActionListener, MouseListener
             }
         }
 
+        if (e.getSource() == btnTim) {
+            String tuKhoa = txtTim.getText();
+            ArrayList<MonNuoc> list = new MonNuoc_DAO().getDSMonNuoc();
+            tableModelMenu.setRowCount(0);
+
+            for (MonNuoc m : list) {
+                if (m.getTenMon().contains(tuKhoa)) {
+                    Object[] rowData = {m.getMaMon(), m.getTenMon(), m.getDonGia()};
+                    tableModelMenu.addRow(rowData);
+                }
+            }
+
+            if (tuKhoa.isEmpty()) {
+                for (MonNuoc m : list) {
+                    Object[] rowData = {m.getMaMon(), m.getTenMon(), m.getDonGia()};
+                    tableModelMenu.addRow(rowData);
+                }
+            }
+
+        }
+
         capNhatTongTien();
         capNhatTongThu();
 
@@ -643,7 +681,6 @@ public class BanHang_GUI extends JPanel implements ActionListener, MouseListener
 
     public void loadMonNuocToTable() {
         tableModelMenu.setRowCount(0);
-        MonNuoc_DAO monNuocDao;
         ArrayList<MonNuoc> dsMonNuoc = monNuoc_dao.getDSMonNuoc();
         for (MonNuoc monNuoc : dsMonNuoc) {
             Object[] rowData = {monNuoc.getMaMon(), monNuoc.getTenMon(), monNuoc.getDonGia()};
@@ -698,7 +735,7 @@ public class BanHang_GUI extends JPanel implements ActionListener, MouseListener
         double tongThu = tinhTongThu();
         txtTongThu.setText(String.valueOf(tongThu));
         int diemTichLuy = (int) (tongThu / 10000);
-        txtDiemTL.setText(String.valueOf(diemTichLuy));
+        // txtDiemTL.setText(String.valueOf(diemTichLuy));
     }
 
 }

@@ -30,6 +30,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.LineBorder;
 
+import entity.MonNuoc;
+
 public class TrangChu_GUI extends JFrame implements ActionListener {
 
     private JButton btnNhanVien;
@@ -40,7 +42,6 @@ public class TrangChu_GUI extends JFrame implements ActionListener {
     private JButton btnDiemDanh;
     private JButton btnTrangChu;
     private JPanel contentPanel;
-    private CardLayout cardLayout;
 
     // constants
     private final Color brown = new Color(139, 69, 19);
@@ -119,8 +120,7 @@ public class TrangChu_GUI extends JFrame implements ActionListener {
         add(pWest, BorderLayout.WEST);
 
         // Center
-        cardLayout = new CardLayout();
-        contentPanel = new JPanel(cardLayout);
+        contentPanel = new JPanel(new CardLayout());
         try {
             InputStream is = getClass().getResourceAsStream("/images/coffee_shop_logo.png");
             BufferedImage image = ImageIO.read(is);
@@ -131,12 +131,6 @@ public class TrangChu_GUI extends JFrame implements ActionListener {
             e.printStackTrace();
         }
         contentPanel.setBackground(brown);
-
-        contentPanel.add(new CapNhatNhanVien_GUI(), "CapNhatNhanVien");
-        contentPanel.add(new BanHang_GUI(), "BanHang");
-        contentPanel.add(new CapNhatMon_GUI(), "CapNhatMon");
-        contentPanel.add(new HoaDon_GUI(), "HoaDon");
-        contentPanel.add(new DiemDanh_GUI(), "DiemDanh");
 
         add(contentPanel, BorderLayout.CENTER);
 
@@ -193,28 +187,40 @@ public class TrangChu_GUI extends JFrame implements ActionListener {
         Object o = e.getSource();
 
         if (o.equals(btnTrangChu)) {
-            cardLayout.show(contentPanel, "TrangChu");
-            setActiveButton(btnTrangChu);
+            JPanel newPanel = new JPanel();
+            try {
+                InputStream is = getClass().getResourceAsStream("/images/coffee_shop_logo.png");
+                BufferedImage image = ImageIO.read(is);
+                Image scaledImage = image.getScaledInstance(900, 700, Image.SCALE_SMOOTH);
+                JLabel imgLabel = new JLabel(new ImageIcon(scaledImage));
+                newPanel.add(imgLabel);
+            } catch (IOException err) {
+                err.printStackTrace();
+            }
+            contentPanel.setBackground(brown);
+            switchContent(newPanel, btnTrangChu);
         } else if (o.equals(btnNhanVien)) {
-            cardLayout.show(contentPanel, "CapNhatNhanVien");
-            setActiveButton(btnNhanVien);
+            switchContent(new CapNhatNhanVien_GUI(), btnNhanVien);
         } else if (o.equals(btnBanHang)) {
-            cardLayout.show(contentPanel, "BanHang");
-            setActiveButton(btnBanHang);
+            switchContent(new BanHang_GUI(), btnBanHang);
         } else if (o.equals(btnSanPham)) {
-            cardLayout.show(contentPanel, "CapNhatMon");
-            setActiveButton(btnSanPham);
+            switchContent(new CapNhatMon_GUI(), btnSanPham);
         } else if (o.equals(btnHoaDon)) {
-            new HoaDon_GUI().loadData();
-            cardLayout.show(contentPanel, "HoaDon");
-            setActiveButton(btnHoaDon);
+            switchContent(new HoaDon_GUI(), btnHoaDon);
         } else if (o.equals(btnDiemDanh)) {
-            cardLayout.show(contentPanel, "DiemDanh");
-            setActiveButton(btnDiemDanh);
+            switchContent(new DiemDanh_GUI(), btnDiemDanh);
         } else if (o.equals(btnDangXuat)) {
             new DangNhap_GUI();
             setVisible(false);
         }
 
+    }
+
+    private void switchContent(JPanel newContent, JButton activeButton) {
+        contentPanel.removeAll();
+        contentPanel.add(newContent);
+        contentPanel.revalidate();
+        contentPanel.repaint();
+        setActiveButton(activeButton);
     }
 }

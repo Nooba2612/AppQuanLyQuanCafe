@@ -13,56 +13,67 @@ public class HoaDon {
     private KhachHang kh;
     private int soBan;
     private Timestamp ngayLap;
-    private String trangThai;
+    private String PhuongThucThanToan;
+    private String loai;
 
     private double tongTien;
     private double thueVAT;
     private double chiPhiKhac;
     private double tongThu;
 
-    public HoaDon(int maHD, NhanVien nv, KhachHang kh, int soBan, Timestamp ngayLap, String trangThai, double tongTien,
-            double thueVAT, double chiPhiKhac, double tongThu) {
+    public HoaDon(int maHD, NhanVien nv, KhachHang kh, int soBan, Timestamp ngayLap, String PhuongThucThanToan, double tongTien,
+            double thueVAT, double chiPhiKhac, double tongThu, String loai) {
         super();
         this.maHD = maHD;
         this.nv = nv;
         this.kh = kh;
         this.soBan = soBan;
         this.ngayLap = ngayLap;
-        this.trangThai = trangThai;
+        this.PhuongThucThanToan = PhuongThucThanToan;
         this.tongTien = tongTien;
         this.thueVAT = thueVAT;
         this.chiPhiKhac = chiPhiKhac;
         this.tongThu = tongThu;
+        this.loai = loai;
     }
 
-    public HoaDon(int maHD, NhanVien nv, KhachHang kh, int soBan, String trangThai,
-            double tongTien, double thueVAT, double chiPhiKhac, double tongThu) {
+    public HoaDon(int maHD, NhanVien nv, KhachHang kh, int soBan, String PhuongThucThanToan,
+            double tongTien, double thueVAT, double chiPhiKhac, double tongThu, String loai) {
         super();
         this.maHD = maHD;
         this.nv = nv;
         this.kh = kh;
-        this.trangThai = trangThai;
+        this.PhuongThucThanToan = PhuongThucThanToan;
         this.tongTien = tongTien;
         this.thueVAT = thueVAT;
         this.chiPhiKhac = chiPhiKhac;
         this.tongThu = tongThu;
+        this.loai = loai;
     }
 
-    public HoaDon(NhanVien nv, KhachHang kh, int soBan, String trangThai,
-            double tongTien, double thueVAT, double chiPhiKhac, double tongThu) {
+    public HoaDon(NhanVien nv, KhachHang kh, int soBan, String PhuongThucThanToan,
+            double tongTien, double thueVAT, double chiPhiKhac, double tongThu, String loai) {
         super();
         this.nv = nv;
         this.kh = kh;
         this.soBan = soBan;
-        this.trangThai = trangThai;
+        this.PhuongThucThanToan = PhuongThucThanToan;
         this.tongTien = tongTien;
         this.thueVAT = thueVAT;
         this.chiPhiKhac = chiPhiKhac;
         this.tongThu = tongThu;
+        this.loai = loai;
     }
 
     public HoaDon() {
-        // TODO Auto-generated constructor stub
+    }
+
+    public void setLoai(String loai) {
+        this.loai = loai;
+    }
+
+    public String getLoai() {
+        return loai;
     }
 
     public int getMaHD() {
@@ -106,11 +117,11 @@ public class HoaDon {
     }
 
     public String getTrangThai() {
-        return trangThai;
+        return PhuongThucThanToan;
     }
 
-    public void setTrangThai(String trangThai) {
-        this.trangThai = trangThai;
+    public void setTrangThai(String PhuongThucThanToan) {
+        this.PhuongThucThanToan = PhuongThucThanToan;
     }
 
 //	public List<ChiTietHoaDon> getHangmuc() {
@@ -164,7 +175,7 @@ public class HoaDon {
     @Override
     public String toString() {
         return "HoaDon [maHD=" + maHD + ", nv=" + nv + ", kh=" + kh + ", soBan=" + soBan + ", ngayLap=" + ngayLap
-                + ", trangThai=" + trangThai + ", tongTien=" + tongTien + ", thueVAT="
+                + ", PhuongThucThanToan=" + PhuongThucThanToan + ", tongTien=" + tongTien + ", thueVAT="
                 + thueVAT + ", chiPhiKhac=" + chiPhiKhac + ", tongThu=" + tongThu + "]";
     }
 }
