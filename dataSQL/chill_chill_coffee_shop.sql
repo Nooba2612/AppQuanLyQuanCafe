@@ -25,22 +25,11 @@ VALUES (1, N'Thu ngân', 25000),
        (2, N'Pha chế', 25000),
 	   (3, N'Phục vụ', 25000),
 	   (4, N'Quản lý', 30000)
-GO
-CREATE TABLE KhuVuc(
-    MaKV int  NOT NULL PRIMARY KEY,
-	TenKV nvarchar(50) NULL
-)
-GO
-INSERT INTO KhuVuc (MaKV, TenKV)
-VALUES (1, N'Tầng 1'),
-       (2, N'Tầng 2'),
-	   (3, N'Khu ngoài trời'),
-	   (4, N'Mang về')
 
 GO
 
 CREATE TABLE KhachHang(
-    MaKH nvarchar(10) NOT NULL PRIMARY KEY,
+    MaKH int IDENTITY(1,1) NOT NULL PRIMARY KEY,
 	TenKH nvarchar(50),
 	SoDienThoai nvarchar(15),
 	DiemTichLuy int DEFAULT 0 -- giá trị mặc định ban đầu là 0
@@ -48,9 +37,9 @@ CREATE TABLE KhachHang(
 GO
 -- tạo khách hàng chỉ có tên với số điện thoại
 INSERT INTO KhachHang (TenKH, SoDienThoai)
-VALUES (N'ac', '0934861057'),
-(N'chi tam', '1244444'),
-(N'anh năm', '15444333')
+VALUES (N'Lê Thanh Lâm', '0934861057'),
+(N'Nguyễn Chi Cường', '0912312322'),
+(N'Nguyễn Nhã Nghi', '0999999999')
 GO
 SET IDENTITY_INSERT KhachHang ON;
 INSERT INTO KhachHang (MaKH, TenKH, SoDienThoai)
@@ -141,8 +130,9 @@ CREATE TABLE HoaDon (
     MaNV nvarchar(10) NOT NULL,
     MaKH int NOT NULL,
     MaBan int NULL,
+	Loai nvarchar(50),
     NgayLapHoaDon datetime DEFAULT GETDATE(),
-    TrangThai nvarchar(10),
+    PhuongThucThanhToan nvarchar(10),
     TongTien money,
     VAT float,
     ChiPhiKhac money,

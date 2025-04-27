@@ -46,22 +46,12 @@ public class HoaDon_DAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            try {
-                if (ps != null) {
-                    ps.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+
         }
         return n > 0;
     }
 
-	 
-	   public ArrayList<HoaDon> getAllHoaDon() {
+    public ArrayList<HoaDon> getAllHoaDon() {
 
         ArrayList<HoaDon> list = new ArrayList<>();
         Connection con = null;
@@ -99,20 +89,7 @@ public class HoaDon_DAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            // Đóng connection, PreparedStatement và ResultSet sau khi sử dụng
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (ps != null) {
-                    ps.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+
         }
 
         return list;
@@ -129,11 +106,6 @@ public class HoaDon_DAO {
             String query = "SELECT SUM(TongThu) AS tongDoanhThu "
                     + "FROM HoaDon "
                     + "WHERE CAST(NgayLapHoaDon AS DATE) = ?";
-            //CAST chuyển đổi cả NgayLapHoaDon và GETDATE() thành kiểu dữ liệu chỉ chứa ngày, không có giờ
-//		        SELECT DAY(NgayLapHoaDon) AS Ngay, SUM(TongThu) AS tongDoanhThu
-//		        FROM HoaDon
-//		        WHERE CAST(NgayLapHoaDon AS DATE) = CAST(GETDATE() AS DATE)
-//		        GROUP BY DAY(NgayLapHoaDon)
             ps = con.prepareStatement(query);
             ps.setDate(1, Date.valueOf(ngay));
             rs = ps.executeQuery();
@@ -185,20 +157,7 @@ public class HoaDon_DAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            // Đóng connection, PreparedStatement và ResultSet sau khi sử dụng
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (ps != null) {
-                    ps.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+
         }
 
         return tongDoanhThuThang;

@@ -71,9 +71,6 @@ public class HoaDon_GUI extends JPanel implements MouseListener, ActionListener 
         scrollHoaDon = new JScrollPane(tableHoaDon);
         scrollHoaDon.setBorder(BorderFactory.createTitledBorder("Danh sách hóa đơn"));
 
-        // load data
-        loadData();
-
         //Tạo textfield button
         textKetQua = new JTextField(20);
         textKetQua.setBorder(BorderFactory.createTitledBorder("Kết quả"));
@@ -83,6 +80,22 @@ public class HoaDon_GUI extends JPanel implements MouseListener, ActionListener 
         btnDTThangNay = new JButton("Doanh thu tháng này");
         btnDTNgay = new JButton("Bảng doanh thu theo ngày");
         btnDTThang = new JButton("Bảng doanh thu theo tháng");
+
+        modelHoaDon.setRowCount(0);
+        ArrayList<HoaDon> dshd = hd_dao.getAllHoaDon();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DecimalFormat fmTien = new DecimalFormat("#,000 VNĐ");
+        for (HoaDon hd : dshd) {
+            this.modelHoaDon.addRow(new Object[]{
+                hd.getMaHD(),
+                dtf.format(hd.getNgayLap().toLocalDateTime()),
+                hd.getNv().getMaNV(),
+                hd.getKh().getMaKH(),
+                hd.getBan() == 0 ? "Mang về" : hd.getBan(),
+                fmTien.format(hd.getTongTien()),
+                fmTien.format(hd.getTongThu())
+            });
+        }
 
         //Panel
         boxBottom.add(textKetQua);
@@ -120,23 +133,6 @@ public class HoaDon_GUI extends JPanel implements MouseListener, ActionListener 
         btnDTHomNay.addActionListener(this);
         btnDTThangNay.addActionListener(this);
         btnBestSeller.addActionListener(this);
-    }
-
-    public void loadData() {
-        ArrayList<HoaDon> dshd = hd_dao.getAllHoaDon();
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        DecimalFormat fmTien = new DecimalFormat("#,000 VNĐ");
-        for (HoaDon hd : dshd) {
-            this.modelHoaDon.addRow(new Object[]{
-                hd.getMaHD(),
-                dtf.format(hd.getNgayLap().toLocalDateTime()),
-                hd.getNv().getMaNV(),
-                hd.getKh().getMaKH(),
-                hd.getBan() == 0 ? "Mang về" : hd.getBan(),
-                fmTien.format(hd.getTongTien()),
-                fmTien.format(hd.getTongThu())
-            });
-        }
     }
 
     @Override
